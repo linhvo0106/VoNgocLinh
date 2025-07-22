@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>365 Ngày Yêu Thương</title>
+    <style>
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            color: white;
+            font-size: 1em;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear infinite;
+            }
+            @keyframes fall {
+                to {
+                    transform: translateY(100vh);
+                }
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(to right, #ff9a9e, #fecfef);
+            color: #fff;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(20, 1fr);
+            gap: 8px;
+            max-width: 85vw;
+        }
+        .cell {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 182, 193, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 50%;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2);
+        }
+        .cell.read {
+            background-color: #ff69b4;
+            color: white;
+        }
+        .cell:hover {
+            transform: scale(1.2);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #ffe4e1;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+            position: relative;
+            color: #d63384;
+            box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.3);
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 24px;
+            color: #d63384;
+        }
+        #markUnread {
+            background: linear-gradient(45deg, #ff758c, #ff7eb3);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 2px 2px 10px rgba(255, 117, 140, 0.6);
+        }
+        #markUnread:hover {
+            transform: scale(1.1);
+            background: linear-gradient(45deg, #ff7eb3, #ff758c);
+        }
+        .cursor-circle {
+            position: fixed;
+            width: 25px;
+            height: 25px;
+            background-color: rgb(255, 76, 76);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.8;
+            transform: translate(-50%, -50%) scale(1);
+            animation: pop 0.5s ease-out;
+        }
+        @keyframes pop {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>365 Ngày Yêu Thương</h1>
+    <audio id="backgroundMusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+    <div class="grid" id="grid"></div>
+    
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="close" id="close">&times;</span>
+            <p id="message"></p>
+            <button id="markUnread">Đánh dấu chưa đọc</button>
+        </div>
+    </div>
+    
+    <div class="modal" id="helloModal" style="display: flex;">
+        <div class="modal-content">
+            <span class="close" id="closeHello">&times;</span>
+            <p>Hello World</p>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener("mousemove", function(e) {
+            const circle = document.createElement("div");
+            circle.className = "cursor-circle";
+            circle.style.left = `${e.pageX}px`;
+            circle.style.top = `${e.pageY}px`;
+            document.body.appendChild(circle);
+            setTimeout(() => circle.remove(), 500);
+        });
+
+        function createSnowflakes() {
+        const snowflake = document.createElement("div");
+        snowflake.className = "snowflake";
+        snowflake.textContent = "❄";
+        snowflake.style.left = Math.random() * 100 + "vw";
+        snowflake.style.animationDuration = (Math.random() * 3 + 2) + "s";
+        snowflake.style.fontSize = (Math.random() * 10 + 10) + "px";
+        document.body.appendChild(snowflake);
+        setTimeout(() => snowflake.remove(), 5000);
+        }
+        setInterval(createSnowflakes, 200);
+
+        document.getElementById("closeHello").onclick = function() {
+            document.getElementById("helloModal").style.display = "none";
+        };
+
+        window.onclick = function(event) {
+            if (event.target === document.getElementById("helloModal")) {
+                document.getElementById("helloModal").style.display = "none";
+            }
+            if (event.target === document.getElementById("modal")) {
+                document.getElementById("modal").style.display = "none";
+            }
+        };
+
+        document.body.addEventListener("click", function() {
+            const music = document.getElementById("backgroundMusic");
+            if (music.paused) {
+                music.play().catch(error => console.log("Tự động phát bị chặn: ", error));
+            }
+        }, { once: true });
+
+        fetch('messages.txt')
+            .then(response => response.text())
+            .then(data => {
+                let messages = data.split('\n');
+                const grid = document.getElementById("grid");
+                const modal = document.getElementById("modal");
+                const messageText = document.getElementById("message");
+                const closeModal = document.getElementById("close");
+                const markUnread = document.getElementById("markUnread");
+                const readCells = new Set(JSON.parse(localStorage.getItem("readCells")) || []);
+                let currentCellIndex = null;
+
+                for (let i = 0; i < 365; i++) {
+                    const cell = document.createElement("div");
+                    cell.className = "cell";
+                    cell.textContent = i + 1;
+                    if (readCells.has(i)) {
+                        cell.classList.add("read");
+                    }
+                    cell.onclick = () => {
+                        messageText.textContent = messages[i] || "Không có nội dung";
+                        modal.style.display = "flex";
+                        cell.classList.add("read");
+                        readCells.add(i);
+                        localStorage.setItem("readCells", JSON.stringify(Array.from(readCells)));
+                        currentCellIndex = i;
+                    };
+                    grid.appendChild(cell);
+                }
+
+                markUnread.onclick = () => {
+                    if (currentCellIndex !== null) {
+                        readCells.delete(currentCellIndex);
+                        localStorage.setItem("readCells", JSON.stringify(Array.from(readCells)));
+                        document.querySelectorAll(".cell")[currentCellIndex].classList.remove("read");
+                    }
+                    modal.style.display = "none";
+                };
+
+                closeModal.onclick = () => modal.style.display = "none";
+            });
+    </script>
+</body>
+</html>
