@@ -21,7 +21,7 @@ def type_multiple_lines(lines, delay, line_pause):
 def main():
     # Danh sách các dòng chữ với màu sắc
     messages = [
-        ("Sự thật là, vẫn chưa ai yêu anh nhiều hơn em từng làm", Fore.GREEN),
+        ("", Fore.GREEN),
         ("Và cũng sẽ chẳng có ai có thể khiến cho nước mắt của em rơi từng hàng", Fore.BLUE),
         ("Và kể cả về sau này, có trong tay biển bạc và rừng vàng", Fore.RED),
         ("Cũng không bao giờ có thể thay thế người con gái bên cạnh lúc bần hàn", Fore.MAGENTA),
